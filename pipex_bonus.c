@@ -30,7 +30,7 @@ int	openfile(char *filename, int mode)
 	}
 	else
 	{
-		fdout = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		fdout = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (fdout == -1)
 		{
 			perror("pipex");
@@ -41,57 +41,11 @@ int	openfile(char *filename, int mode)
 	}
 }
 
-char	*get_path(char *cmd, char **env)
-{
-	char	*path;
-	char	*dir;
-	char	*bin;
-	int		i;
-
-	i = 0;
-	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
-		i++;
-	if (!env[i])
-		return (cmd);
-	path = env[i] + 5;
-	while (path && ft_strchr(path, ':') > -1)
-	{
-		dir = ft_strndup(path, ft_strchr(path, ':'));
-		bin = str_join(dir, cmd);
-		free(dir);
-		if (access(bin, F_OK) == 0)
-			return (bin);
-		free(bin);
-		path += ft_strchr(path, ':') + 1;
-	}
-	return (cmd);
-}
-
-void	execute(char *command, char **env)
-{
-	char	**ac;
-	char	*path;
-
-	if (command[0] != '\0')
-		ac = ft_split(command, ' ');
-	else
-	{
-		wrong_cmd(command);
-		exit(127);
-	}
-	path = get_path(ac[0], env);
-	if (execve(path, ac, env) != 0)
-	{
-		wrong_cmd(command);
-	}
-}
-
-void	redirection(char *command, char **env, char *in)
+void	redirection(char *command, char **env)
 {
 	int	fd[2];
 	int	pid;
 
-	(void)in;
 	if (pipe(fd) == -1)
 		exit(2);
 	pid = fork();
@@ -108,7 +62,7 @@ void	redirection(char *command, char **env, char *in)
 	}
 }
 
-void final_execute(char *command, char **env)
+void	final_execute(char *command, char **env)
 {
 	int	pid;
 
@@ -117,11 +71,11 @@ void final_execute(char *command, char **env)
 		execute(command, env);
 }
 
-void first_execute(char *command, char **env, char *in)
+void	first_execute(char *command, char **env, char *in)
 {
 	int	fd[2];
 	int	pid;
-	int filein;
+	int	filein;
 
 	if (pipe(fd) == -1)
 		exit(2);
@@ -143,33 +97,27 @@ void first_execute(char *command, char **env, char *in)
 
 int	main(int ac, char **av, char **env)
 {
+	int	filein;
 	int	fileout;
-	int i;
-	int status = 0;
+	int	i;
 
-	i = 3;
-	if (ac >= 5)
+	i = 2;
+	fileout = openfile(av[ac - 1], OUTFILE);
+	if (ft_strncmp(av[1], "here_doc", 8) == 0 && ac == 6)
 	{
-		fileout = openfile(av[ac - 1], OUTFILE);
 		dup2(fileout, STDOUT);
-		if (ft_strncmp(av[1], "here_doc", 9) == 0 && ac == 6)
-		{
-			here_doc(av[3], env, av[2]);
-			redirection(av[3], env, av[2]);
-		}
-		else if (ft_strncmp(av[1], "here_doc", 9) != 0)
-		{
-			first_execute(av[2], env, av[1]);
-			while(av[i + 2])
-			{
-				redirection(av[i], env, av[1]);
-				i++;
-			}
-			final_execute(av[i], env);
-			while ((wait(&status)) > 0);
-		}
-		close(fileout);
-		exit(0);
+		here_doc(av[2]);
+		redirection(av[3], env);
+		execute(av[4], env);
+	}
+	else if (ac >= 5)
+	{
+		filein = openfile(av[1], INFILE);
+		dup2(filein, STDIN);
+		dup2(fileout, STDOUT);
+		while (i < ac - 2)
+			redirection(av[i++], env);
+		execute(av[ac - 2], env);
 	}
 	else
 		write(STDERR, "Invalid number of arguments.\n", 29);

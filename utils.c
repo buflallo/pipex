@@ -70,7 +70,7 @@ void	wrong_cmd(char *cmd)
 {
 	write(STDERR, "pipex: ", 7);
 	write(STDERR, cmd, ft_strchr(cmd, 0));
-	if(ft_strchr(cmd,'/') != -1)
+	if (ft_strchr(cmd, '/') != -1)
 		write(STDERR, ": No such file or directory\n", 28);
 	else
 		write(STDERR, ": command not found\n", 20);

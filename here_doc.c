@@ -23,28 +23,28 @@ size_t	ft_strlen1(char *str)
 	return (i);
 }
 
-void	write_to_fd1(char *lmt, int fd[2], char *command, char **env)
+void	write_to_fd1(char *lmt, int *fd)
 {
 	char	*str;
 
 	str = get_next_line(0);
-	dup2(fd[0],STDIN);
 	while (str)
 	{
-		if (ft_strncmp(str, lmt, ft_strlen1(lmt)) == 0 || (lmt[0] == '\0' && str[0] == '\n'))
-			break;
-		write(fd[0], str, ft_strlen1(str));
-		write(2, "\n", 1);
+		str[ft_strlen1(str) - 1] = '\0';
+		if (ft_strcmp(str, lmt) == 0)
+		{
+			free(str);
+			exit(1);
+		}
+		write(fd[1], str, ft_strlen1(str));
+		write(fd[1], "\n", 1);
 		free(str);
 		str = get_next_line(0);
 	}
-	if (str)
-		free(str);
-	dup2(fd[1], STDOUT);
-	execute(command, env);
+	free(str);
 }
 
-void	here_doc(char *command, char **env, char *lmd)
+void	here_doc(char *lmd)
 {
 	int		fd[2];
 	int		pid;
@@ -59,6 +59,6 @@ void	here_doc(char *command, char **env, char *lmd)
 	}
 	else
 	{
-		write_to_fd1(lmd, fd, command, env);
+		write_to_fd1(lmd, fd);
 	}
 }
