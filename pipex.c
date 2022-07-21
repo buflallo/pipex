@@ -6,7 +6,7 @@
 /*   By: hlachkar <hlachkar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 02:47:47 by hlachkar          #+#    #+#             */
-/*   Updated: 2022/06/27 00:00:40 by hlachkar         ###   ########.fr       */
+/*   Updated: 2022/07/22 00:56:23 by hlachkar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,13 @@ void	redirection(char *command, char **env, char *in)
 	pid = fork();
 	if (pid)
 	{
+		waitpid(pid, NULL, 0);
 		close(fd[1]);
 		dup2(fd[0], STDIN);
 	}
 	else
 	{
+		
 		close(fd[0]);
 		dup2(fd[1], STDOUT);
 		filein = openfile(in, INFILE);
@@ -67,10 +69,14 @@ void	redirection(char *command, char **env, char *in)
 void	final_execute(char *command, char **env)
 {
 	int	pid;
+	int *status;
 
+	status = NULL;
 	pid = fork();
 	if (!pid)
+	{
 		execute(command, env);
+	}
 }
 
 int	main(int ac, char **av, char **env)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hlachkar <hlachkar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 04:30:42 by hlachkar          #+#    #+#             */
-/*   Updated: 2022/06/23 23:45:29 by hlachkar         ###   ########.fr       */
+/*   Updated: 2022/07/22 00:47:22 by hlachkar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ char	*get_path(char *cmd, char **env)
 		i++;
 	if (!env[i])
 		return (cmd);
+	if (ft_strchr(cmd, '.') == 0)
+		return (NULL);
 	path = env[i] + 5;
 	while (path && ft_strchr(path, ':') > -1)
 	{
@@ -61,8 +63,9 @@ void	execute(char *command, char **env)
 		exit(127);
 	}
 	path = get_path(ac[0], env);
-	if (execve(path, ac, env) != 0)
-	{
-		wrong_cmd(command);
-	}
+	if (!path && access(ac[0], X_OK) != 0)
+		wrong_cmd(ac[0]);
+	else
+		if (execve(path, ac, env) != 0)
+			wrong_cmd(command);
 }

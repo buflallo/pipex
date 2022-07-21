@@ -6,7 +6,7 @@
 /*   By: hlachkar <hlachkar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 04:10:39 by hlachkar          #+#    #+#             */
-/*   Updated: 2022/06/24 16:03:26 by hlachkar         ###   ########.fr       */
+/*   Updated: 2022/07/22 00:45:26 by hlachkar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,10 @@ void	wrong_cmd(char *cmd)
 {
 	write(STDERR, "pipex: ", 7);
 	write(STDERR, cmd, ft_strchr(cmd, 0));
-	if (ft_strchr(cmd, '/') != -1)
+	if (ft_strchr(cmd, '/') != -1 && access(cmd, F_OK) != 0)
 		write(STDERR, ": No such file or directory\n", 28);
+	else if (ft_strchr(cmd, '.') == 0)
+		write(STDERR, ": file not executable\n", 23);
 	else
 		write(STDERR, ": command not found\n", 20);
 	exit(127);
