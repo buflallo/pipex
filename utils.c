@@ -70,10 +70,15 @@ void	wrong_cmd(char *cmd)
 {
 	write(STDERR, "pipex: ", 7);
 	write(STDERR, cmd, ft_strchr(cmd, 0));
-	if (ft_strchr(cmd, '/') != -1 && access(cmd, F_OK) != 0)
+	if (access(cmd, F_OK) == 0 && ((ft_strchr(cmd, '.') == 0 && \
+	ft_strchr(cmd, '/') == 1) || (ft_strchr(cmd, '/') == 0)) && \
+	access(cmd, X_OK) != 0)
+		write(STDERR, ": Permission denied\n", 23);
+	else if (access(cmd, F_OK) == 0 && (access(cmd, W_OK) || access(cmd, R_OK)))
+		write(STDERR, ": Permission denied\n", 21);
+	else if (access(cmd, F_OK) != 0 && ((ft_strchr(cmd, '.') == 0 && \
+	ft_strchr(cmd, '/') == 1) || ft_strchr(cmd, '/') == 0))
 		write(STDERR, ": No such file or directory\n", 28);
-	else if (ft_strchr(cmd, '.') == 0)
-		write(STDERR, ": file not executable\n", 23);
 	else
 		write(STDERR, ": command not found\n", 20);
 	exit(127);

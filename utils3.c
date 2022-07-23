@@ -24,8 +24,8 @@ char	*get_path(char *cmd, char **env)
 		i++;
 	if (!env[i])
 		return (cmd);
-	if (ft_strchr(cmd, '.') == 0)
-		return (NULL);
+	if (ft_strchr(cmd, '.') == 0 || ft_strchr(cmd, '/') == 0)
+		return (cmd);
 	path = env[i] + 5;
 	while (path && ft_strchr(path, ':') > -1)
 	{
@@ -63,9 +63,72 @@ void	execute(char *command, char **env)
 		exit(127);
 	}
 	path = get_path(ac[0], env);
-	if (!path && access(ac[0], X_OK) != 0)
+	if (ft_strcmp(path,ac[0]) == 0 && access(path, X_OK) != 0)
 		wrong_cmd(ac[0]);
+	if (execve(path, ac, env) != 0)
+		wrong_cmd(command);
+}
+
+int output_file(char *filename, int mode)
+{
+	int	fdout;
+
+	if (!access(filename, F_OK) && access(filename, W_OK))
+		wrong_cmd(filename);
+	if (mode == O_APPEND)
+		fdout = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	else
-		if (execve(path, ac, env) != 0)
-			wrong_cmd(command);
+		fdout = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fdout == -1)
+	{
+		perror("pipex");
+		exit(127);
+	}
+	else
+		return (fdout);
+}
+
+int input_file(char *filename)
+{
+	int fdin;
+
+	if (access(filename, F_OK) || access(filename, R_OK))
+		wrong_cmd(filename);
+	fdin = open(filename, O_RDONLY, 0644);
+	if (fdin == -1)
+	{
+		perror("pipex");
+		exit(127);
+	}
+	else
+		return (fdin);
+}
+
+int	openfile(char *filename, int mode)
+{
+	if (mode == INFILE)
+		return input_file(filename);
+	else
+		return output_file(filename, mode);
+}
+
+void	redirection_pipe_line(char *command, char **env)
+{
+	int	fd[2];
+	int	pid;
+
+	if (pipe(fd) == -1)
+		exit(2);
+	pid = fork();
+	if (pid)
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN);
+	}
+	else
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT);
+		execute(command, env);
+	}
 }

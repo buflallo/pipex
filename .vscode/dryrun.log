@@ -1,5 +1,6 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/bufallo/pipexlast'
-make: Nothing to be done for 'all'.
+gcc -Wall -Wextra -Werror  -g pipex.c utils.c utils1.c utils3.c  -o pipex1
+echo "👍👍👍"
 make: Leaving directory '/home/bufallo/pipexlast'
  

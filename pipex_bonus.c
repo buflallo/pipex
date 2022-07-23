@@ -13,55 +13,6 @@
 #include "pipex.h"
 #include "get_next_line.h"
 
-int	openfile(char *filename, int mode)
-{
-	int	fdout;
-
-	if (mode == INFILE)
-	{
-		if (access(filename, F_OK))
-		{
-			write(STDERR, "pipex: ", 7);
-			write(STDERR, filename, ft_strchr(filename, '\0'));
-			write(STDERR, ": No such file or directory\n", 28);
-			exit(127);
-		}
-		return (open(filename, O_RDONLY, 0644));
-	}
-	else
-	{
-		fdout = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		if (fdout == -1)
-		{
-			perror("pipex");
-			exit(127);
-		}
-		else
-			return (fdout);
-	}
-}
-
-void	redirection(char *command, char **env)
-{
-	int	fd[2];
-	int	pid;
-
-	if (pipe(fd) == -1)
-		exit(2);
-	pid = fork();
-	if (pid)
-	{
-		close(fd[1]);
-		dup2(fd[0], STDIN);
-	}
-	else
-	{
-		close(fd[0]);
-		dup2(fd[1], STDOUT);
-		execute(command, env);
-	}
-}
-
 void	final_execute(char *command, char **env)
 {
 	int	pid;
@@ -71,31 +22,19 @@ void	final_execute(char *command, char **env)
 		execute(command, env);
 }
 
-void	first_execute(char *command, char **env, char *in)
+void	execution1(int ac, char **av, char **env)
 {
-	int	fd[2];
-	int	pid;
-	int	filein;
+	int	fileout;
 
-	if (pipe(fd) == -1)
-		exit(2);
-	pid = fork();
-	if (pid)
-	{
-		close(fd[1]);
-		dup2(fd[0], STDIN);
-	}
-	else
-	{
-		close(fd[0]);
-		dup2(fd[1], STDOUT);
-		filein = openfile(in, INFILE);
-		dup2(filein, STDIN);
-		execute(command, env);
-	}
+	fileout = openfile(av[ac - 1], O_APPEND);
+	dup2(fileout, STDOUT);
+	here_doc(av[2]);
+	redirection_pipe_line(av[3], env);
+	execute(av[4], env);
+	close(fileout);
 }
 
-int	main(int ac, char **av, char **env)
+void	execution2(int ac, char **av, char **env)
 {
 	int	filein;
 	int	fileout;
@@ -103,23 +42,27 @@ int	main(int ac, char **av, char **env)
 
 	i = 2;
 	fileout = openfile(av[ac - 1], OUTFILE);
+	filein = openfile(av[1], INFILE);
+	dup2(filein, STDIN);
+	dup2(fileout, STDOUT);
+	while (i < ac - 2)
+		redirection_pipe_line(av[i++], env);
+	final_execute(av[ac - 2], env);
+	close(fileout);
+}
+
+int	main(int ac, char **av, char **env)
+{
+	int	status;
+
+	status = 0;
 	if (ft_strncmp(av[1], "here_doc", 8) == 0 && ac == 6)
-	{
-		dup2(fileout, STDOUT);
-		here_doc(av[2]);
-		redirection(av[3], env);
-		execute(av[4], env);
-	}
+		execution1(ac, av, env);
 	else if (ac >= 5)
-	{
-		filein = openfile(av[1], INFILE);
-		dup2(filein, STDIN);
-		dup2(fileout, STDOUT);
-		while (i < ac - 2)
-			redirection(av[i++], env);
-		execute(av[ac - 2], env);
-	}
+		execution2(ac, av, env);
 	else
 		write(STDERR, "Invalid number of arguments.\n", 29);
+	while ((waitpid(-1, &status, 0)) > 0)
+		;
 	return (1);
 }

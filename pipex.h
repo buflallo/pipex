@@ -39,6 +39,7 @@ int		ft_charcount(const char *s, char c, int i);
 int		ft_words(char const *s, char c);
 void	*ft_freedom(char **str);
 char	**ft_split(char const *s, char c);
+void	redirection_pipe_line(char *command, char **env);
 void	wrong_cmd(char *cmd);
 void	here_doc(char *lmd);
 char	*get_path(char *cmd, char **env);

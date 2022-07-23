@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul 22 03:02:45 2022
+# Make data base, printed on Sat Jul 23 07:42:18 2022
 
 # Variables
 
@@ -59,7 +59,7 @@ PATH = /home/bufallo/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630
 # environment
 VSCODE_LOG_STACK = false
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-c8ce306a-0416-4d6e-8f90-2dfb2646d4b2.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-0a5615f6-6425-4670-8859-98a9134dffe1.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -81,7 +81,7 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 LOGNAME = bufallo
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # makefile (from 'Makefile', line 6)
 SRC_BONUS = pipex_bonus.c utils.c utils1.c utils3.c get_next_line.c get_next_line_utils.c here_doc.c 
 # environment
@@ -163,9 +163,9 @@ MOTD_SHOWN = update-motd
 
 # Directories
 
-# . (device 2, inode 3096224744505251): 25 files, no impossibilities.
+# . (device 2, inode 3096224744505251): 23 files, no impossibilities.
 
-# 25 files, no impossibilities in 1 directories.
+# 23 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -182,7 +182,7 @@ here_doc.c:
 # Not a target:
 utils3.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 03:01:04.5866628
+#  Last modified 2022-07-23 00:12:05.3475064
 #  File has been updated.
 #  Successfully updated.
 
@@ -204,14 +204,14 @@ all: pipex1
 # Not a target:
 utils.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 02:56:55.8783893
+#  Last modified 2022-07-23 01:14:15.9673118
 #  File has been updated.
 #  Successfully updated.
 
 pipex1: pipex.c utils.c utils1.c utils3.c
 #  Implicit rule search has not been done.
 #  Implicit/static pattern stem: ''
-#  Last modified 2022-07-22 03:02:08.3461401
+#  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # automatic
@@ -229,7 +229,7 @@ pipex1: pipex.c utils.c utils1.c utils3.c
 # automatic
 # ^ := pipex.c utils.c utils1.c utils3.c
 # automatic
-# ? := pipex.c
+# ? := pipex.c utils.c utils1.c utils3.c
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=3/13=23%
 #  recipe to execute (from 'Makefile', line 18):
@@ -252,21 +252,21 @@ get_next_line.c:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 03:02:06.2976943
+#  Last modified 2022-07-22 09:34:14.6593968
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 pipex.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 03:02:39.5157506
+#  Last modified 2022-07-23 07:41:26.8477306
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
 utils1.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-22 01:18:01.6302341
+#  Last modified 2022-07-22 09:34:14.6788057
 #  File has been updated.
 #  Successfully updated.
 
@@ -324,12 +324,12 @@ pipex: pipex_bonus.c utils.c utils1.c utils3.c get_next_line.c get_next_line_uti
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 34 / storage = 288 B / avg = 8 B
-# current buf: size = 8162 B / used = 288 B / count = 34 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 33 / storage = 282 B / avg = 8 B
+# current buf: size = 8162 B / used = 282 B / count = 33 / avg = 8 B
 
-# strcache performance: lookups = 65 / hit rate = 47%
+# strcache performance: lookups = 63 / hit rate = 47%
 # hash-table stats:
-# Load=34/8192=0%, Rehash=0, Collisions=1/65=2%
-# Finished Make data base on Fri Jul 22 03:02:45 2022
+# Load=33/8192=0%, Rehash=0, Collisions=1/63=2%
+# Finished Make data base on Sat Jul 23 07:42:18 2022
 
  
