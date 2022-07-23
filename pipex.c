@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.c                                      :+:      :+:    :+:   */
+/*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hlachkar <hlachkar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 08:07:00 by hlachkar          #+#    #+#             */
-/*   Updated: 2022/06/27 00:56:21 by hlachkar         ###   ########.fr       */
+/*   Updated: 2022/07/23 23:11:11 by hlachkar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,6 @@ int	main(int ac, char **av, char **env)
 		write(STDERR, "Invalid number of arguments.\n", 29);
 	while ((waitpid(-1, &status, 0)) > 0)
 		;
-	return (1);
+	exit(0);
+	return (0);
 }

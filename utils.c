@@ -6,7 +6,7 @@
 /*   By: hlachkar <hlachkar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 04:10:39 by hlachkar          #+#    #+#             */
-/*   Updated: 2022/07/22 00:45:26 by hlachkar         ###   ########.fr       */
+/*   Updated: 2022/07/23 23:06:35 by hlachkar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,10 @@ void	wrong_cmd(char *cmd)
 	if (access(cmd, F_OK) == 0 && ((ft_strchr(cmd, '.') == 0 && \
 	ft_strchr(cmd, '/') == 1) || (ft_strchr(cmd, '/') == 0)) && \
 	access(cmd, X_OK) != 0)
-		write(STDERR, ": Permission denied\n", 23);
+		write(STDERR, ": Permission denied\n", 21);
 	else if (access(cmd, F_OK) == 0 && (access(cmd, W_OK) || access(cmd, R_OK)))
 		write(STDERR, ": Permission denied\n", 21);
-	else if (access(cmd, F_OK) != 0 && ((ft_strchr(cmd, '.') == 0 && \
-	ft_strchr(cmd, '/') == 1) || ft_strchr(cmd, '/') == 0))
+	else if (access(cmd, F_OK) != 0)
 		write(STDERR, ": No such file or directory\n", 28);
 	else
 		write(STDERR, ": command not found\n", 20);
